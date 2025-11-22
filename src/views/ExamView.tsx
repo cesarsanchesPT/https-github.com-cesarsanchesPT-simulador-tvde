@@ -34,13 +34,11 @@ export const ExamView: React.FC<ExamViewProps> = ({
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Iniciar novo exame ao montar componente com base na categoria e configurações
     setIsLoading(true);
+    // Small timeout to ensure UI renders loading state before heavy calculation
     const timer = setTimeout(() => {
       const newQuestions = generateExam(categoryId);
-      
-      // Ajustar número de questões se a categoria for específica
-      // O generateExam já deve retornar o pool correto, mas fazemos slice para garantir
+      // Adjust number of questions
       const finalQuestions = newQuestions.slice(0, totalQuestions);
 
       setQuestions(finalQuestions);
@@ -69,9 +67,7 @@ export const ExamView: React.FC<ExamViewProps> = ({
       return acc;
     }, [] as MistakeRecord[]);
 
-    // Calcular aprovação com base numa percentagem fixa (ex: 90%) ou regra
-    // Regra base: Passa se errar menos de 3 em 30 (10%). 
-    // Nota: Oficialmente TVDE é 27/30. Código B é 27/30. 
+    // Pass logic: e.g. must get >= (Total - 3).
     const passed = score >= (questions.length - 3) && !isTimeout;
 
     const result: ExamResult = {
@@ -122,7 +118,6 @@ export const ExamView: React.FC<ExamViewProps> = ({
 
   return (
     <div className="max-w-3xl mx-auto pb-24 animate-fade-in pt-4">
-      {/* Header Bar */}
       <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-4 mb-6 flex flex-wrap gap-4 items-center justify-between sticky top-20 z-30">
         <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-start">
           <div className="flex items-center gap-3">
@@ -150,7 +145,6 @@ export const ExamView: React.FC<ExamViewProps> = ({
         </div>
       </div>
 
-      {/* Question Card */}
       <div className="bg-white rounded-3xl shadow-xl border border-gray-200 overflow-hidden">
         <div className="p-6 sm:p-10">
           <div className="flex items-center justify-between mb-6">
@@ -197,7 +191,6 @@ export const ExamView: React.FC<ExamViewProps> = ({
           </div>
         </div>
 
-        {/* Navigation Footer */}
         <div className="bg-gray-50 px-6 py-6 border-t border-gray-100 flex justify-between items-center">
           <button
             onClick={() => setCurrentIndex(prev => Math.max(0, prev - 1))}
